@@ -19,8 +19,8 @@ class Config {
         return Address("New Street", "Solapur")
     }
 
-    @Bean
+    /*@Bean
     fun generalManager(): Manager {
         return GeneralManager()
-    }
+    }*/
 }

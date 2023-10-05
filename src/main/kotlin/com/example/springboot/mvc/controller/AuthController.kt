@@ -6,6 +6,7 @@ import com.example.springboot.mvc.model.Response
 import com.example.springboot.mvc.model.User
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -16,6 +17,11 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/auth")
 class AuthController {
+
+    @ExceptionHandler(value = [NoSuchElementException::class])
+    fun handleException(e: NoSuchElementException): ResponseEntity<Response> {
+        return ResponseEntity(Response(e.message ?: "No such element found."), HttpStatus.NOT_FOUND)
+    }
 
     @PostMapping("/login")
     fun login(@RequestBody data: LoginForm): Response {
@@ -31,12 +37,8 @@ class AuthController {
     }
 
     @GetMapping("/users/{id}")
-    fun getUser(@PathVariable id: Int): ResponseEntity<Any> {
-        val user = Data.users.find { it.id == id }
-        if (user != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(user)
-        }
-        return ResponseEntity(Response("No user with id: $id"), HttpStatus.BAD_REQUEST)
+    fun getUser(@PathVariable id: Int): ResponseEntity<User> {
+        val user = Data.users.first { it.id == id }
+        return ResponseEntity(user, HttpStatus.OK)
     }
-
 }

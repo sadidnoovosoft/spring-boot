@@ -34,7 +34,8 @@ class HelloController {
     }
 
     @GetMapping("/hello4")
-    fun hello4(@RequestHeader("Accept-Language") acceptLanguage: String? = "hin"): String {
+    fun hello4(@RequestHeader("Accept-Language", defaultValue = "hin") acceptLanguage: String): String {
+        println(acceptLanguage)
         return when (acceptLanguage) {
             "hin" -> "Namaste"
             "en" -> "Hello"
